@@ -32,9 +32,9 @@ struct AABB {
 };
 
 bool IsCollision(const AABB& aabb1, const AABB& aabb2) {
-	if ((aabb1.max.x <= aabb2.max.x && aabb1.min.x >= aabb2.min.x) &&
-		(aabb1.max.y <= aabb2.max.y && aabb1.min.y >= aabb2.min.y) &&
-		(aabb1.max.z <= aabb2.max.z && aabb1.min.z >= aabb2.min.z)) {
+	if ((aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x) &&
+		(aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y) &&
+		(aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z)) {
 		return true;
 	}
 	return false;
@@ -146,7 +146,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	Vector3 cameraPosition = { 0.0f ,0.0f,-20.0f };
 	Vector3 cameraTranslate = { 0.0f,-1.0f,-6.49f };
-	Vector3 cameraRotate = { 0.26f,0.26f,0.0f };
+	Vector3 cameraRotate = { -0.26f,0.26f,0.0f };
 
 	// ウィンドウの×ボタンが押されるまでループ
 	while (Novice::ProcessMessage() == 0) {
@@ -182,9 +182,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		DrawaAABB(Box2, WorldViewProjectionMatrix, viewportMatrix,color2);
 		
 		
-		bool collsion  = IsCollision(Box1, Box2);
-
-		if (collsion) {
+		if (IsCollision(Box1, Box2)) {
 			color2 = RED;
 		}
 		else {
@@ -195,10 +193,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		ImGui::Begin("window");
 		ImGui::DragFloat3("CameraTranslate", &cameraTranslate.x, 0.01f);
 		ImGui::DragFloat3("CameraRotate", &cameraRotate.x, 0.01f);
-		ImGui::DragFloat3("box1", &Box1.min.x, 0.01f);
-		ImGui::DragFloat3("box1", &Box1.max.x, 0.01f);
+
+		ImGui::DragFloat3("box1 min", &Box1.min.x, 0.01f);
+		ImGui::DragFloat3("box1 max", &Box1.max.x, 0.01f);
+
 		ImGui::DragFloat3("box2 min", &Box2.min.x, 0.01f);
 		ImGui::DragFloat3("box2 max", &Box2.max.x, 0.01f);
+
 
 		ImGui::End();
 
